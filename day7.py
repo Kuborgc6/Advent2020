@@ -51,6 +51,26 @@ def rec_find_bag(name, result_bags):
         return result, result_bags
 
     
-result, result_bags = rec_find_bag(my_bag,result_bags)
-print(result)
-print(len(result_bags))
+#result, result_bags = rec_find_bag(my_bag,result_bags)
+#print(result)
+#print(len(result_bags))
+
+
+############ PART TWO
+result = 0
+def find_inside(name, result):
+
+    index_name = main_name_list.index(name)
+    if which_inside_list[index_name]:
+        for bag in which_inside_list[index_name]:
+            result_temp = find_inside(bag, 0)
+            if result_temp == 0:
+                result += how_many_list[index_name][which_inside_list[index_name].index(bag)]
+            else: 
+                result += how_many_list[index_name][which_inside_list[index_name].index(bag)]*(result_temp+1)
+        return result
+    else:   
+        result = 0
+        return result
+    
+print(find_inside(my_bag, result))
