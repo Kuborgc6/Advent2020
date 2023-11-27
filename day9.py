@@ -27,7 +27,16 @@ def find_invalid(rand_list, preamble):
             for k in range(j,i):
                 sum_list.append(rand_list[j]+rand_list[k])
         if rand_list[i] not in sum_list:
-            result = rand_list[i]
-            return result
+            for j in range(i):
+                temp_result = rand_list[j]
+                list_result = list()
+                list_result.append(rand_list[j])
+                while(temp_result < rand_list[i]):
+                    j += 1
+                    temp_result += rand_list[j]
+                    list_result.append(rand_list[j])
+                if rand_list[i] == temp_result:
+                    result = min(list_result) + max(list_result)
+                    return result
 
 print(find_invalid(lines, preamble))
