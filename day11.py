@@ -30,96 +30,87 @@ def change_layout(layout, max_len_i, max_len_j):
                 result_layout = change_taken(i,j,layout,result_layout, max_len_i, max_len_j)
     return result_layout
 
+def search_adjacent(layout, i, j, max_len_i, max_len_j):
+    result = list()
+
+    k = i - 1 
+    l = j - 1
+    while(k >= 0 and l >= 0):
+        if layout[k][l] != '.':
+            result.append(layout[k][l])
+            break
+        k -= 1
+        l -= 1
+    
+    k = i - 1 
+    while(k >= 0):
+        if layout[k][j] != '.':
+            result.append(layout[k][j])
+            break
+        k -= 1
+
+    k = i - 1 
+    l = j + 1
+    while(k >= 0 and l <= max_len_j - 1):
+        if layout[k][l] != '.':
+            result.append(layout[k][l])
+            break
+        k -= 1 
+        l += 1
+
+    l = j - 1
+    while(l >= 0):
+        if layout[i][l] != '.':
+            result.append(layout[i][l])
+            break
+        l -= 1
+
+    k = i + 1 
+    l = j - 1
+    while(k <= max_len_i - 1 and l >= 0):
+        if layout[k][l] != '.':
+            result.append(layout[k][l])
+            break
+        k += 1
+        l -= 1
+
+    k = i + 1 
+    while(k <= max_len_i - 1):
+        if layout[k][j] != '.':
+            result.append(layout[k][j])
+            break
+        k += 1
+
+    k = i + 1 
+    l = j + 1
+    while(k <= max_len_i - 1 and l <= max_len_j - 1):
+        if layout[k][l] != '.':
+            result.append(layout[k][l])
+            break
+        k += 1
+        l += 1
+    
+    l = j + 1
+    while(l <= max_len_j - 1):
+        if layout[i][l] != '.':
+            result.append(layout[i][l])
+            break
+        l += 1
+
+    return result
+
 def change_L(i,j,layout,result_layout, max_len_i, max_len_j):
-    if i == 0:
-        if j == 0:
-            if '#' not in layout[i][j:j+2] and '#' not in layout[i+1][j:j+2]:
-                result_layout[i][j] = '#'
-        elif j == max_len_j - 1:
-            if '#' not in layout[i][j-1:j+1] and  '#' not in layout[i+1][j-1:j+1]:
-                result_layout[i][j] = '#'
-        else:
-            if '#' not in layout[i][j-1:j+2] and  '#' not in layout[i+1][j-1:j+2]:
-                result_layout[i][j] = '#'
-    elif i == max_len_i - 1:
-        if j == 0:
-            if '#' not in layout[i-1][j:j+2] and '#' not in layout[i][j:j+2]:
-                result_layout[i][j] = '#'
-        elif j == max_len_j - 1:
-            if '#' not in layout[i-1][j-1:j+1] and  '#' not in layout[i][j-1:j+1]:
-                result_layout[i][j] = '#'
-        else:
-            if '#' not in layout[i-1][j-1:j+2] and  '#' not in layout[i][j-1:j+2]:
-                result_layout[i][j] = '#'
-    else:
-        if j == 0:
-            if '#' not in layout[i-1][j:j+2] and '#' not in layout[i][j:j+2] and '#' not in layout[i+1][j:j+2]:
-                result_layout[i][j] = '#'
-        elif j == max_len_j - 1:
-            if '#' not in layout[i-1][j-1:j+1] and  '#' not in layout[i][j-1:j+1] and '#' not in layout[i+1][j:j+1]:
-                result_layout[i][j] = '#'
-        else:
-            if '#' not in layout[i-1][j-1:j+2] and  '#' not in layout[i][j-1:j+2] and  '#' not in layout[i+1][j-1:j+2]:
-                result_layout[i][j] = '#'     
+    adjacent_seats = search_adjacent(layout, i, j, max_len_i, max_len_j)
+    if '#' not in adjacent_seats:
+        result_layout[i][j] = '#'
     return result_layout
 
 def change_taken(i,j,layout,result_layout, max_len_i, max_len_j):
-    adjacent_seats = list()
-    if i == 0:
-        if j == 0:
-            adjacent_seats.append(layout[i][j+1])
-            adjacent_seats.extend(layout[i+1][j:j+2])
-            if adjacent_seats.count('#') >= 4:
-                result_layout[i][j] = 'L'
+    adjacent_seats = search_adjacent(layout, i, j, max_len_i, max_len_j)
+    
+    if adjacent_seats.count('#') >= 5:
+        result_layout[i][j] = 'L'
 
-        elif j == max_len_j - 1:
-            adjacent_seats.append(layout[i][j-1])
-            adjacent_seats.extend(layout[i+1][j-1:j+1])
-            if adjacent_seats.count('#') >= 4:
-                result_layout[i][j] = 'L'
-        else:
-            adjacent_seats.append(layout[i][j-1])
-            adjacent_seats.append(layout[i][j+1])
-            adjacent_seats.extend(layout[i+1][j-1:j+2])
-            if adjacent_seats.count('#') >= 4:
-                result_layout[i][j] = 'L'
-    elif i == max_len_i - 1:
-        if j == 0:
-            adjacent_seats.extend(layout[i-1][j:j+2])
-            adjacent_seats.append(layout[i][j+1])
-            if adjacent_seats.count('#') >= 4:
-                result_layout[i][j] = 'L'
-        elif j == max_len_j - 1:
-            adjacent_seats.extend(layout[i-1][j-1:j+1])
-            adjacent_seats.append(layout[i][j-1])
-            if adjacent_seats.count('#') >= 4:
-                result_layout[i][j] = 'L'
-        else:
-            adjacent_seats.extend(layout[i-1][j-1:j+2])
-            adjacent_seats.append(layout[i][j-1])
-            adjacent_seats.append(layout[i][j+1])
-            if adjacent_seats.count('#') >= 4:
-                result_layout[i][j] = 'L'
-    else:
-        if j == 0:
-            adjacent_seats.extend(layout[i-1][j:j+2])
-            adjacent_seats.append(layout[i][j+1])
-            adjacent_seats.extend(layout[i+1][j:j+2])
-            if adjacent_seats.count('#') >= 4:
-                result_layout[i][j] = 'L'
-        elif j == max_len_j - 1:
-            adjacent_seats.extend(layout[i-1][j-1:j+1])
-            adjacent_seats.append(layout[i][j-1])
-            adjacent_seats.extend(layout[i+1][j-1:j+1])
-            if adjacent_seats.count('#') >= 4:
-                result_layout[i][j] = 'L'
-        else:
-            adjacent_seats.extend(layout[i-1][j-1:j+2])
-            adjacent_seats.append(layout[i][j-1])
-            adjacent_seats.append(layout[i][j+1])
-            adjacent_seats.extend(layout[i+1][j-1:j+2])
-            if adjacent_seats.count('#') >= 4:
-                result_layout[i][j] = 'L'     
     return result_layout
 
 chaos = True
