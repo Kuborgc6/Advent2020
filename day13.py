@@ -56,7 +56,7 @@ for i in range(len(nk)):
             result += e*yk[i]
             break
 
-print(result%M_chinise)
+print(result % M_chinise)
 
 
 from math import prod
