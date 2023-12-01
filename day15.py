@@ -1,5 +1,5 @@
-# file = open('input.txt', 'r')
-file = open('test_input.txt', 'r')
+file = open('input.txt', 'r')
+# file = open('test_input.txt', 'r')
 
 lines = [line.split() for line in file]
 
@@ -11,21 +11,26 @@ for i in range(0, len(values)):
 current = 0
 i = 1
 values_dict = dict()
-
+values_dict_new = dict()
 
 for value in values:
     current = value
     values_dict[current] = i
+    values_dict_new[current] = i
     i += 1
 
-while(i < 2020):
-    temp = 0
-    if current in values_dict.keys():
-        space = (i - 1) - values_dict[current] 
-        current = space
-    else:
+last_spoken = current
+while(i <= 30000000):
+    if last_spoken not in values_dict.keys():
         current = 0
-    temp = values_dict[current]
-    values_dict[current] = i
+        
+    else:
+        space = (i - 1) - values_dict[last_spoken] 
+        current = space
+
+    values_dict[last_spoken] = i - 1
+
+    last_spoken = current
     i += 1
 
+print(current)
